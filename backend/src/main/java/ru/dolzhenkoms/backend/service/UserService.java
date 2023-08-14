@@ -1,14 +1,13 @@
 package ru.dolzhenkoms.backend.service;
 
-import ru.dolzhenkoms.backend.dto.UserLoginRequestDto;
-import ru.dolzhenkoms.backend.dto.UserLoginResponseDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.dolzhenkoms.backend.dto.UserRegisterRequestDto;
 import ru.dolzhenkoms.backend.entity.User;
 
 import java.util.Optional;
 
-public interface UserService {
-    Optional<User> registerNewUser(UserRegisterRequestDto user);
+public interface UserService extends UserDetailsService {
+    User createNewUser(UserRegisterRequestDto userRegisterRequestDto);
 
-    Optional<UserLoginResponseDto> loginUser(UserLoginRequestDto user);
+    Optional<User> findByLogin(String login);
 }

@@ -1,14 +1,17 @@
 package ru.dolzhenkoms.backend.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.dolzhenkoms.backend.dto.UserLoginRequestDto;
-import ru.dolzhenkoms.backend.dto.UserLoginResponseDto;
 import ru.dolzhenkoms.backend.dto.UserRegisterRequestDto;
-import ru.dolzhenkoms.backend.entity.User;
 import ru.dolzhenkoms.backend.repository.UserRepository;
 import ru.dolzhenkoms.backend.service.UserService;
 
+import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -17,41 +20,34 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
-    public Optional<User> registerNewUser(UserRegisterRequestDto user) {
-        if (userRepository.findUserByLogin(user.getLogin()) != null) {
-            return Optional.empty();
-        }
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        final var user = userRepository.findUserByLogin(username).orElseThrow(() -> new UsernameNotFoundException(
+                String.format("Username '%s' not found", username)
+        ));
 
-        final var newUser = User.builder()
-                .name(user.getName())
-                .login(user.getLogin())
-                .password(user.getPassword())
-                .build();
-
-        userRepository.save(newUser);
-
-        return Optional.of(newUser);
+        //TODO update roles
+        return new User(
+                user.getLogin(),
+                user.getPassword(),
+                Collections.emptyList()
+        );
     }
 
     @Override
-    public Optional<UserLoginResponseDto> loginUser(UserLoginRequestDto user) {
-        final var userFromDb = userRepository.findUserByLogin(user.getLogin());
+    public ru.dolzhenkoms.backend.entity.User createNewUser(UserRegisterRequestDto userRegisterRequestDto) {
+        final var newUser = new ru.dolzhenkoms.backend.entity.User();
+        newUser.setLogin(userRegisterRequestDto.getLogin());
+        newUser.setName(userRegisterRequestDto.getName());
+        newUser.setPassword(passwordEncoder.encode(userRegisterRequestDto.getPassword()));
+        return userRepository.save(newUser);
+    }
 
-        if (userFromDb == null) {
-            return Optional.empty();
-        }
-
-        if (!userFromDb.getPassword().equals(user.getPassword())) {
-            return Optional.empty();
-        }
-
-        final var response = UserLoginResponseDto
-                .builder()
-                .name(userFromDb.getName())
-                .surname(userFromDb.getLastname())
-                .build();
-
-        return Optional.of(response);
+    @Override
+    public Optional<ru.dolzhenkoms.backend.entity.User> findByLogin(String login) {
+        return userRepository.findUserByLogin(login);
     }
 }
