@@ -10,4 +10,6 @@ public interface UserService extends UserDetailsService {
     User createNewUser(UserRegisterRequestDto userRegisterRequestDto);
 
     Optional<User> findByLogin(String login);
+
+    Optional<User> findById(Long id);
 }

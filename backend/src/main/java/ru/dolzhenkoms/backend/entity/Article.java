@@ -1,10 +1,8 @@
 package ru.dolzhenkoms.backend.entity;
 
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +12,9 @@ import java.util.List;
 @Entity
 @ToString
 @NoArgsConstructor
+@Builder
 @Table(name = "article")
+@AllArgsConstructor
 public class Article {
 
     @Id
