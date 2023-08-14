@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/article")
+@RequestMapping("/api/v1/article")
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -28,7 +28,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getArticleDetailsById(id));
     }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<CreateArticleResponseDto> createArticle(@RequestBody CreateArticleRequestDto request) {
         return ResponseEntity.ok(articleService.createArticle(request));
     }
