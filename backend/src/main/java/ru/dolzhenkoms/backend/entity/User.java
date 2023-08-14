@@ -1,7 +1,8 @@
 package ru.dolzhenkoms.backend.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,6 +46,7 @@ public class User {
     private String email;
 
     @Column
+    @CreationTimestamp
     private LocalDate birthday;
 
     @OneToMany(
