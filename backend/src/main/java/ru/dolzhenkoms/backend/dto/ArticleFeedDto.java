@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class ArticleFeedDto {
+    private long id;
 
     private String name;
 
