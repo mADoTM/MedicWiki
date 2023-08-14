@@ -5,4 +5,5 @@ import ru.dolzhenkoms.backend.entity.Article;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     Article findArticleByName(String name);
+    Article findArticleById(Long id);
 }
