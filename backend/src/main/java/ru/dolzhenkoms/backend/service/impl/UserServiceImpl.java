@@ -50,4 +50,9 @@ public class UserServiceImpl implements UserService {
     public Optional<ru.dolzhenkoms.backend.entity.User> findByLogin(String login) {
         return userRepository.findUserByLogin(login);
     }
+
+    @Override
+    public Optional<ru.dolzhenkoms.backend.entity.User> findById(Long id) {
+        return userRepository.findById(id);
+    }
 }
